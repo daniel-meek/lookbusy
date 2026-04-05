@@ -1,21 +1,23 @@
-# idlegen 
+# lookbusy 
 
-A lightweight Linux terminal utility that simulates high-activity "hacker-style" logs. Usefull for background aesthetics or looking busy when someone walks past your desk.
+## About
+
+`lookbusy` is a lightweight Linux terminal utility that simulates high-activity "hacker-style" logs. Usefull for background aesthetics or looking busy when someone walks past your desk.
 
 * **Current Version:** `v0.0.1-alpha`  
 * **Status:** `Experimental` - This utility is in early development. Features may be added, removed, or broken at any time.
  
-# Screenshots
+## Screenshots
 
-![idlegen crypto](assets/crypto.gif)
+![lookbusy crypto](assets/crypto.gif)
 
-![idlegen proxy](assets/proxy.gif)
+![lookbusy proxy](assets/proxy.gif)
 
 ## Usage
 
 Run the executable followed by the module name you wish to simulate:
 ``` bash
-idlegen <module>
+lookbusy <module> [speed]
 ```
 
 To stop the text generation, simply use `CTRL+C` to "abort the process!".
@@ -37,20 +39,20 @@ To stop the text generation, simply use `CTRL+C` to "abort the process!".
 
 ## Installation
 
-Since `idlegen` uses standard C libraries, you only need `gcc` to get it running.
+Since `lookbusy` uses standard C libraries, you only need `gcc` to get it running.
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/daniel-meek/idlegen.git
-   cd idlegen
+   git clone https://github.com/daniel-meek/lookbusy.git
+   cd lookbusy
    ```
 2. **Compile the source:**
    ``` bash
-   gcc -o idlegen main.c
+   gcc -o lookbusy main.c
    ```
 3. **(Optional) Install to your path:**
    ``` bash
-   sudo mv idlegen /usr/local/bin/
+   sudo mv lookbusy /usr/local/bin/
    ```
 
 ## Changelog

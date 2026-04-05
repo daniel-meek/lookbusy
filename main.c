@@ -1,7 +1,7 @@
 /*
  * ---------------------------------------------------------
- * PROJECT: idlegen
- * DESCRIPTION: Linux terminal nonsense generator
+ * PROJECT: lookbusy
+ * DESCRIPTION: Linux terminal nonsense generator. "Because looking busy is 90% of the job."
  * VERSION: 0.0.1-alpha
  * DATE: 2026-04-05
  * AUTHOR: Daniel Meek (https://github.com/daniel-meek)
