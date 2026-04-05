@@ -48,6 +48,12 @@ To stop the text generation, simply use `CTRL+C` to "abort the process!".
 * `packages` - Simulates APT-style system updates, dependency building, and unpacking.
 * `random` - Picks one of the above modules at random.
 
+### Speed Settings
+
+* `--normal` - 1x speed
+* `--fast` - 2x speed
+* `--slow` - 10x speed
+
 ## License
 
 This project is open-source and available under the [MIT License](https://www.google.com/search?q=LICENSE).
