@@ -11,31 +11,12 @@ A lightweight Linux terminal utility that simulates high-activity "hacker-style"
 
 ![idlegen proxy](assets/proxy.gif)
 
-## Installation
-
-Since `idlegen` uses standard C libraries, you only need `gcc` to get it running.
-
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/daniel-meek/idlegen.git
-   cd idlegen
-   ```
-2. **Compile the source:**
-   ``` bash
-   gcc -o idlegen main.c
-   ```
-3. **(Optional) Install to your path:**
-   ``` bash
-   sudo mv idlegen /usr/local/bin/
-   ```
-
 ## Usage
 
 Run the executable followed by the module name you wish to simulate:
 ``` bash
 idlegen <module>
 ```
-
 
 To stop the text generation, simply use `CTRL+C` to "abort the process!".
 
@@ -54,11 +35,33 @@ To stop the text generation, simply use `CTRL+C` to "abort the process!".
 * `--fast` - 2x speed
 * `--slow` - 10x speed
 
-## License
+## Installation
 
-This project is open-source and available under the [MIT License](https://www.google.com/search?q=LICENSE).
+Since `idlegen` uses standard C libraries, you only need `gcc` to get it running.
+
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/daniel-meek/idlegen.git
+   cd idlegen
+   ```
+2. **Compile the source:**
+   ``` bash
+   gcc -o idlegen main.c
+   ```
+3. **(Optional) Install to your path:**
+   ``` bash
+   sudo mv idlegen /usr/local/bin/
+   ```
 
 ## Changelog
 
 ### v0.0.1-alpha - 2026-04-05
 - Initial commit with 5 modules, speed settings, and simple error handling.
+
+## Author
+
+Developed with ☕ by @daniel-meek
+
+## License
+
+This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) file for the full text.
