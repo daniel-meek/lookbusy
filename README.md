@@ -10,11 +10,11 @@
 ## Screenshots
 
 <div align="center">
-  <img src="assets/crypto.gif" width="48%" alt="Crypto module" />
-  <img src="assets/proxy.gif" width="48%" alt="Proxy module" />
+  <img src="assets/crypto.gif" width="80%" alt="Crypto module" />
   <br>
-  <img src="assets/network.gif" width="48%" alt="Network module" />
-  <img src="assets/ml.gif" width="48%" alt="ML module" />
+  <img src="assets/proxy.gif" width="80%" alt="Proxy module" />
+  <br>
+  <img src="assets/network.gif" width="80%" alt="Network module" />
 </div>
 
 ## Usage

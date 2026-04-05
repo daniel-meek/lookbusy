@@ -18,6 +18,10 @@
 #include <signal.h>
 #include <time.h>
 
+#define APP_VERSION "0.0.2-alpha"
+#define APP_AUTHOR "daniel-meek"
+#define APP_REPO "https://github.com/daniel-meek/lookbusy"
+
 // ---------------------------------------------------------
 // HELPER FUNCTIONS
 // ---------------------------------------------------------
@@ -37,11 +41,12 @@
 
 float speed_factor = 1.0; // Global speed factor
 
-// Helper function to sleep for milliseconds *modified by speed_factor
+// Function to sleep for milliseconds *modified by speed_factor
 void msleep(int ms) {
     usleep((int)(ms * speed_factor) * 1000);
 }
 
+// Function to get a formatted timestamp string
 void get_time(char *buf) {
     time_t raw;
     struct tm *info;
@@ -66,6 +71,8 @@ void handle_sigint(int sig) {
     exit(0);
 }
 
+ 
+// Function to draw a realistic APT-style progress bar
 void draw_apt_progress(int current, int total, const char *operation) {
     int percent = (current * 100) / total;
     if (percent > 100) percent = 100;
@@ -78,12 +85,11 @@ void draw_apt_progress(int current, int total, const char *operation) {
 
 // ---------------------------------------------------------
 // MODULE IMPLEMENTATION
-// 
-// cryptominer - 
-// proxy - 
-// network - 
-// ml - 
-// packages -
+// - cryptominer
+// - proxy
+// - network 
+// - ml
+// - packages
 // ---------------------------------------------------------
 
 void module_cryptominer() {
@@ -138,7 +144,7 @@ void module_cryptominer() {
 
     while(1) {
         // RANDOM FLUFF STAGE
-        int fluff_count = 2 + (rand() % 4); // generates 2, 3, 4, or 5
+        int fluff_count = 2 + (rand() % 4); // get 2-5 fluff messages
         for(int f=0; f < fluff_count; f++) {
             get_time(t);
             printf("%s [%sSYSTEM%s] %s\n", t, CLR_YELLOW, CLR_RESET, fluff[rand() % 20]);
@@ -228,15 +234,14 @@ void module_proxy() {
     char t[22];
 
     while (1) {
-        
-        // FLUFF STAGE
+
         int total_proxies = 8 + (rand() % (256 - 8 + 1)); // Range between 8 and 256
         int current_count = 1;
         int valid_count = 0;
         int broken_count = 0;
 
+        // FLUFF STAGE
         get_time(t);
-
         printf("%s [%sSYSTEM%s] %s\n", t, CLR_YELLOW, CLR_RESET, fluff[rand() % 15]);
         msleep(600 + (rand() % 600));
         printf("%s [%sSYSTEM%s] %s\n", t, CLR_YELLOW, CLR_RESET, fluff[rand() % 15]);
@@ -320,7 +325,6 @@ void module_network() {
 
     const char *flags[] = {"[S]", "[P.]", "[.]", "[S.]", "[R]", "[F.]"};
     int target_ports[] = {80, 443, 22, 3389, 8080, 53, 3306, 6379, 21, 23};
-
     char t[22];
 
     while (1) {
@@ -361,13 +365,13 @@ void module_network() {
             
             // 5% chance to throw an inline error frame
             if (rand() % 100 < 5) {
-                printf("%s %sIP%s %s%d.%d.%d.%d.%d%s > %s173.18.45.%d.%d%s: %s[ERROR: %s]%s seq %u, len %d\n",
+                printf("%s %sIP%s %s%d.%d.%d.%d:%d%s > %s172.18.45.%d:%d%s: %s[ERROR: %s]%s seq %u, len %d\n",
                        t, CLR_CYAN, CLR_RESET,
                        CLR_WHITE, ip1, ip2, ip3, ip4, sport, CLR_RESET,
                        CLR_GREEN, tip4, dport, CLR_RESET,
                        CLR_RED, stream_errors[rand() % 5], CLR_RESET, seq, len);
             } else {
-                printf("%s %sIP%s %s%d.%d.%d.%d.%d%s > %s173.18.45.%d.%d%s: Flags %s%s%s, seq %u, win %d, length %d\n",
+                printf("%s %sIP%s %s%d.%d.%d.%d:%d%s > %s172.18.45.%d:%d%s: Flags %s%s%s, seq %u, win %d, length %d\n",
                        t, CLR_CYAN, CLR_RESET,
                        CLR_WHITE, ip1, ip2, ip3, ip4, sport, CLR_RESET,
                        CLR_GREEN, tip4, dport, CLR_RESET,
@@ -772,21 +776,30 @@ typedef struct {
 
 // Register all modules here
 ActivityModule modules[] = {
-    {"crypto",   "Simulates a high-speed cryptocurrency miner", module_cryptominer},
-    {"proxy",    "Simulates a proxy server validator with success/fail rates", module_proxy},
-    {"network",  "Prints realistic incoming and outgoing HTTP/TCP traffic", module_network},
-    {"ml",       "Simulates deep learning model training output", module_ml},
-    {"package", "Simulates fetching, downloading, and installing system updates", module_package}
+    {"crypto",  "Simulates a high-speed multi-GPU cryptocurrency mining rig", module_cryptominer},
+    {"proxy",   "High-concurrency proxy scanner with latency testing", module_proxy},
+    {"network", "Deep packet inspection firewall logger and TCP/IP hex dumper", module_network},
+    {"ml",      "Dynamic ML pipelines with GPU allocation and epoch training", module_ml},
+    {"package", "Authentic Debian APT system updates and unpacking", module_package}
 };
+
 int num_modules = sizeof(modules) / sizeof(modules[0]);
 
 void print_help(const char *prog_name) {
-    printf("Usage: %s <module>\n\n", prog_name);
+    printf("Usage: %s <module> [speed]\n\n", prog_name);
     printf("Available modules:\n");
     for (int i = 0; i < num_modules; i++) {
         printf("  %-10s : %s\n", modules[i].name, modules[i].description);
     }
     printf("  %-10s : Pick a random module\n", "random");
+}
+
+void print_about() {
+    printf("lookbusy - Linux terminal nonsense generator\n");
+    printf("Version: %s\n", APP_VERSION);
+    printf("Author:  %s\n", APP_AUTHOR);
+    printf("Repo:    %s\n", APP_REPO);
+    printf("License: MIT\n");
 }
 
 int main(int argc, char *argv[]) {
@@ -801,6 +814,21 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
+    for (int i = 1; i < argc; i++) {
+        if (strcmp(argv[i], "--version") == 0 || strcmp(argv[i], "-v") == 0) {
+            printf("lookbusy %s\n", APP_VERSION);
+            return 0;
+        }
+        if (strcmp(argv[i], "--about") == 0 || strcmp(argv[i], "-a") == 0) {
+            print_about();
+            return 0;
+        }
+        if (strcmp(argv[i], "--help") == 0 || strcmp(argv[i], "-h") == 0) {
+            print_help(argv[0]);
+            return 0;
+        }
+    }
+
     const char *target_module = NULL;
 
     // Loop through arguments to find speed flags and the module name
@@ -811,6 +839,10 @@ int main(int argc, char *argv[]) {
             speed_factor = 0.5; // 2x faster
         } else if (strcmp(argv[i], "--faster") == 0) {
             speed_factor = 0.1; // 10x faster
+        } else if (strcmp(argv[i], "--slow") == 0) {
+            speed_factor = 2.0; // 2x slower
+        } else if (strcmp(argv[i], "--slower") == 0) {
+            speed_factor = 4.0; // 4x slower
         } else {
             // If it's not a speed flag, it's a module
             target_module = argv[i];
