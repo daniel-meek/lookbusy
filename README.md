@@ -1,4 +1,5 @@
 # idlegen 
+
 A lightweight Linux terminal utility that simulates high-activity "hacker-style" logs. Usefull for background aesthetics or looking busy when someone walks past your desk.
 
 * **Current Version:** `v0.0.1-alpha`  
@@ -6,11 +7,9 @@ A lightweight Linux terminal utility that simulates high-activity "hacker-style"
  
 # Screenshots
 
-![idlegen demo](assets/crypto.gif)
-[crypto]
+![idlegen crypto](assets/crypto.gif)
 
-![idlegen demo](assets/proxy.gif)
-[proxy]
+![idlegen proxy](assets/proxy.gif)
 
 ## Installation
 
@@ -52,3 +51,8 @@ To stop the text generation, simply use `CTRL+C` to "abort the process!".
 ## License
 
 This project is open-source and available under the [MIT License](https://www.google.com/search?q=LICENSE).
+
+## Changelog
+
+### v0.0.1-alpha - 2026-04-05
+- Initial commit with 5 modules, speed settings, and simple error handling.

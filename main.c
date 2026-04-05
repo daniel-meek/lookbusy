@@ -3,12 +3,12 @@
  * PROJECT: idlegen
  * DESCRIPTION: Linux terminal nonsense generator
  * VERSION: 0.0.1-alpha
+ * DATE: 2026-04-05
  * AUTHOR: Daniel Meek (https://github.com/daniel-meek)
  * STAGE: Experimental
  * LICENSE: MIT
  * ---------------------------------------------------------
  */
-
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -18,9 +18,9 @@
 #include <signal.h>
 #include <time.h>
 
-//---------------------------------------------------------
+// ---------------------------------------------------------
 // HELPER FUNCTIONS
-//---------------------------------------------------------
+// ---------------------------------------------------------
 
 #define CLR_RED     "\033[0;31m"
 #define CLR_GREEN   "\033[0;32m"
@@ -35,9 +35,11 @@
 #define CURSOR_SHOW "\033[?25h"
 #define CURSOR_HIDE "\033[?25l"
 
-// Helper function to sleep for milliseconds
+float speed_factor = 1.0; // Global speed factor
+
+// Helper function to sleep for milliseconds *modified by speed_factor
 void msleep(int ms) {
-    usleep(ms * 1000);
+    usleep((int)(ms * speed_factor) * 1000);
 }
 
 void get_time(char *buf) {
@@ -221,8 +223,9 @@ void module_proxy() {
     char t[22];
 
     while (1) {
-        // Range between 8 and 256
-        int total_proxies = 8 + (rand() % (256 - 8 + 1));
+        
+        // FLUFF STAGE
+        int total_proxies = 8 + (rand() % (256 - 8 + 1)); // Range between 8 and 256
         int current_count = 1;
         int valid_count = 0;
         int broken_count = 0;
@@ -236,19 +239,18 @@ void module_proxy() {
         printf("%s [%sSYSTEM%s] Starting verification of %d nodes...\n\n", t, CLR_YELLOW, CLR_RESET,total_proxies);
         msleep(100);
 
+        // VERIFICATION STAGE
         while (current_count <= total_proxies) {
             int ip1 = 1 + rand() % 223, ip2 = rand() % 255, ip3 = rand() % 255, ip4 = 1 + rand() % 254;
             int ports[] = {80, 8080, 3128, 1080, 8000, 999, 5678, 4153, 1081, 1082, 6779, 6515, 5757, 7771, 8127, 8315, 8062, 6300, 8989, 8001};
             int port = ports[rand() % 20];
             int is_valid = (rand() % 100 < 80);
 
-            // Logic for timing: 90% are fast (0.5s-2s), 10% are slow (up to 30s)
-            if (rand() % 10 == 0) {
-                // Occasional long hang
-                msleep(5000 + rand() % 25000); 
+            // Logic for timing - 95% are fast (0.5s-2s), 5% are slow (up to 5s-30s)
+            if (rand() % 5 == 0) {
+                msleep(5000 + rand() % 25000); // Slow
             } else {
-                // Normal fast speed
-                msleep(500 + rand() % 1500);
+                msleep(500 + rand() % 1500); // Fast
             }
 
             if (is_valid) {
@@ -395,40 +397,53 @@ void print_help(const char *prog_name) {
 }
 
 int main(int argc, char *argv[]) {
-
-    // Register the Ctrl+C (SIGINT) handler
+    // CTRL+C Handler
     signal(SIGINT, handle_sigint);
     
+    // Random number for random module
     srand(time(NULL));
 
-    // Seed random number generator
-    srand(time(NULL));
-    
     if (argc < 2) {
         print_help(argv[0]);
         return 1;
     }
-    
-    const char *target_module = argv[1];
-    
-    // Handle 'random' argument
+
+    const char *target_module = NULL;
+
+    // Loop through arguments to find speed flags and the module name
+    for (int i = 1; i < argc; i++) {
+        if (strcmp(argv[i], "--normal") == 0) {
+            speed_factor = 1.0; // normal
+        } else if (strcmp(argv[i], "--fast") == 0) {
+            speed_factor = 0.5; // 2x faster
+        } else if (strcmp(argv[i], "--faster") == 0) {
+            speed_factor = 0.1; // 10x faster
+        } else {
+            // If it's not a speed flag, it's a module
+            target_module = argv[i];
+        }
+    }
+
+    if (target_module == NULL) {
+        printf("Error: No module specified.\n");
+        print_help(argv[0]);
+        return 1;
+    }
+
+    // Handle 'random' logic
     if (strcmp(target_module, "random") == 0) {
         target_module = modules[rand() % num_modules].name;
     }
-    
-    // Find and execute the requested module
+
+    // Module execution loop... (keep your existing logic here)
     for (int i = 0; i < num_modules; i++) {
         if (strcmp(target_module, modules[i].name) == 0) {
-            // Hide the cursor for cleaner output
-            printf("\033[?25l");
-            
-            // Run infinite loop for the module
+            printf("\033[?25l"); // Hide cursor
             modules[i].func();
-            return 0; // Won't actually reach here unless a module terminates
+            return 0;
         }
     }
-    
-    printf("Error: Module '%s' not found.\n\n", target_module);
-    print_help(argv[0]);
+
+    printf("Error: Module '%s' not found.\n", target_module);
     return 1;
 }
