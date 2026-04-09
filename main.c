@@ -393,19 +393,31 @@ void module_network() {
         for (int r = 0; r < dump_rows; r++) {
             printf("      %s%04x%s | ", CLR_YELLOW, offset, CLR_RESET);
             
-            unsigned char chunk[16]; // Increased to 16 bytes
+            unsigned char chunk[16];
+            
+            // The final row will have a random cut-off between 1 and 15 bytes
+            int bytes_in_row = 16;
+            if (r == dump_rows - 1) {
+                bytes_in_row = 1 + (rand() % 15); 
+            }
             
             // Print Hexadecimal Bytes
             for (int b = 0; b < 16; b++) {
-                chunk[b] = rand() % 256;
-                printf("%02x ", chunk[b]);
+                if (b < bytes_in_row) {
+                    chunk[b] = rand() % 256;
+                    printf("%02x ", chunk[b]);
+                } else {
+                    // Pad missing bytes 
+                    printf("   "); 
+                }
+                
                 if (b == 7) printf(" "); // Standard 8-byte visual gap
             }
             
             printf("| ");
             
-            // Print ASCII Decoding
-            for (int b = 0; b < 16; b++) {
+            // Print ASCII Decoding (Only print up to the actual bytes in this row)
+            for (int b = 0; b < bytes_in_row; b++) {
                 char c = chunk[b];
                 if (c >= 32 && c <= 126) {
                     printf("%s%c%s", CLR_CYAN, c, CLR_RESET);
@@ -414,7 +426,8 @@ void module_network() {
                 }
             }
             printf("\n");
-            offset += 16; // Increment by 16 instead of 8
+            
+            offset += bytes_in_row; // Increment offset by actual bytes printed
         }
 
         int hold_time = 5000 + (rand() % 15000); // hold for 5-20s
