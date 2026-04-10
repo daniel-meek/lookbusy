@@ -2,8 +2,8 @@
  * ---------------------------------------------------------
  * PROJECT: lookbusy
  * DESCRIPTION: Linux terminal nonsense generator.
- * VERSION: 0.0.2-alpha
- * DATE: 2026-04-05
+ * VERSION: 0.0.3-experimental
+ * DATE: 2026-04-09
  * AUTHOR: Daniel Meek (https://github.com/daniel-meek)
  * STAGE: Experimental
  * LICENSE: MIT
@@ -18,7 +18,7 @@
 #include <signal.h>
 #include <time.h>
 
-#define APP_VERSION "0.0.2-alpha"
+#define APP_VERSION "0.0.3-experimental" // Remember to update with VERSION!
 #define APP_AUTHOR "daniel-meek"
 #define APP_REPO "https://github.com/daniel-meek/lookbusy"
 
@@ -39,9 +39,10 @@
 #define CURSOR_SHOW "\033[?25h"
 #define CURSOR_HIDE "\033[?25l"
 
-float speed_factor = 1.0; // Global speed factor
+// Global speed factor, modified with -s, --speed
+float speed_factor = 1.0; 
 
-// Function to sleep for milliseconds *modified by speed_factor
+// Function to sleep for milliseconds *modified with speed_factor
 void msleep(int ms) {
     usleep((int)(ms * speed_factor) * 1000);
 }
@@ -72,7 +73,7 @@ void handle_sigint(int sig) {
 }
 
  
-// Function to draw a realistic APT-style progress bar
+// Function to draw a realistic apt-style progress bar
 void draw_apt_progress(int current, int total, const char *operation) {
     int percent = (current * 100) / total;
     if (percent > 100) percent = 100;
@@ -488,7 +489,7 @@ void module_ml() {
         int task_idx = rand() % 7;
         struct MLTask current_task = tasks[task_idx];
         
-        // INITIALIZATION & DATA PIPELINE
+        // INITIALIZATION & DATA PIPELINE STAGE
         get_time(t);
         printf("%s [%sML-OPS%s] Initializing %s backend...\n", t, CLR_MAGENTA, CLR_RESET, frameworks[rand() % 5]);
         msleep(400 + rand() % 400);
@@ -502,7 +503,7 @@ void module_ml() {
         for(int f = 0; f < fluff_count; f++) {
             get_time(t);
             printf("%s [%sML-OPS%s] %s\n", t, CLR_MAGENTA, CLR_RESET, ml_fluff[rand() % 20]);
-            msleep(600 + (rand() % 1500)); // Variable delays as it "processes" the data
+            msleep(600 + (rand() % 1500)); 
         }
 
         get_time(t);
@@ -533,7 +534,7 @@ void module_ml() {
                     int bar_width = 30;
                     int filled = (percent * bar_width) / 100;
                     
-                    // Keras-style progress bar using \r (Added spacing to match your style)
+                    // Keras-style progress bar using \r
                     printf("\r Steps: %4d/%d [%s", step, steps, CLR_GREEN);
                     for(int i = 0; i < bar_width; i++) {
                         if (i < filled - 1) printf("=");
@@ -589,15 +590,15 @@ void module_ml() {
         printf("%s [%sSYSTEM%s] %sSaved to disk:%s model_weights_epoch_final%s %s[OK]%s\n\n", 
                t, CLR_YELLOW, CLR_RESET, CLR_GREEN, CLR_RESET, extensions[rand() % 5], CLR_GREEN, CLR_RESET);
         
-        // Long hold before the next model starts training
-        msleep(4000 + rand() % 5000); 
+        // Long wait before the next model starts training
+        msleep(4000 + rand() % 3000); 
     }
 }
 
 void module_package() {
     // Word pools to generate realistic Debian package names
     const char *prefixes[] = {
-        "lib", "python3-", "golang-", "node-", "ruby-", "php8.1-", "gcc-11-", "firmware-", "linux-image-", "linux-headers-", "postgresql-", "mysql-server-", "nginx-module-", "apache2-", "libqt5", "libgtk-3-", "rust-", "haskell-", "perl-module-", "x11-", "fonts-", "docker-"
+        "lib", "python3-", "golang-", "node-", "ruby-", "php8.1-", "gcc-11-", "firmware-", "linux-image-", "linux-headers-", "postgresql-", "mysql-server-", "nginx-module-", "apache2-", "libqt5", "libgtk-3-", "rust-", "haskell-", "perl-module-", "x11-", "fonts-", "docker-",
     };
     
     const char *bases[] = {
@@ -605,7 +606,18 @@ void module_package() {
     };
     
     const char *suffixes[] = {
-        "-dev", "-doc", "-common", "-bin", "-minimal", "-core", "-dbg", "1a", "2", "3", "4", "5", "6", "7", "8", "-ext", "-plugin", ""
+        "-dev", "-doc", "-common", "-bin", "-minimal", "-core", "-dbg", "1a", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "-ext", "-plugin", ""
+    };
+
+    const char *libraries[] = {
+        "http://archive.ubuntu.com/ubuntu jammy/main", 
+        "http://security.ubuntu.com/ubuntu jammy-security/main",
+        "http://archive.ubuntu.com/ubuntu jammy-updates/main",
+        "http://ppa.launchpadcontent.net/deadsnakes/ppa/ubuntu jammy/main",
+        "http://repository.lookbusy.com stable/non-free",
+        "https://packages.microslop.com/repos/code stable/main",
+        "https://dl.googol.com/linux/chrome/deb stable/main"
+        
     };
 
     char t[22];
@@ -669,8 +681,8 @@ void module_package() {
         // FETCHING STAGE
         int fetched_kb = 0;
         for (int i = 0; i < pkg_count; i++) {
-            printf("\r\033[KGet:%d http://archive.ubuntu.com/ubuntu jammy/main amd64 %s amd64 %s [%d kB]\n",
-                   i + 1, pkg_names[i], pkg_versions[i], pkg_sizes[i]);
+            printf("\r\033[KGet:%d %s amd64 %s amd64 %s [%d kB]\n",
+                   i + 1, libraries[rand() % (sizeof(libraries)/sizeof(libraries[0]))], pkg_names[i], pkg_versions[i], pkg_sizes[i]);
             
             fetched_kb += pkg_sizes[i];
             // During fetch, APT usually just shows [Working]
@@ -732,7 +744,7 @@ void module_package() {
         msleep(960);
 
         // SUCCESS / ERROR STAGE
-        if (rand() % 100 < 15) { 
+        if (rand() % 100 < 15) { // "error" 
             int err_idx = rand() % pkg_count;
             printf("\r\033[K\n%s[FATAL]%s dpkg: error processing package %s%s%s (--configure):\n", CLR_RED, CLR_RESET, CLR_WHITE, pkg_names[err_idx], CLR_RESET);
             printf("\r\033[K%s installed %s package post-installation script subprocess returned error exit status 1%s\n", CLR_RED, pkg_names[err_idx], CLR_RESET);
@@ -751,7 +763,7 @@ void module_package() {
             printf("\r\033[K%s [%sSYSTEM%s] Rebuilding dpkg journal... %sFailed.%s\n\n", t, CLR_RED, CLR_RESET, CLR_RED, CLR_RESET);
             msleep(6000); 
             
-        } else {
+        } else { // "success"
             get_time(t);
             printf("\r\033[K\n%s [%sSYSTEM%s] %sAPT transaction successful. Verifying integrity...%s\n", t, CLR_YELLOW, CLR_RESET, CLR_GREEN, CLR_RESET);
             msleep(1500);
@@ -869,10 +881,10 @@ int main(int argc, char *argv[]) {
             if (i + 1 < argc) {
                 float input_speed = atof(argv[i + 1]);
                 
-                // Clamp the speed to our safe bounds
+                // Clamp the speed to "usable" bounds [0.01 - 100]
                 if (input_speed < 0.01) {
                     input_speed = 0.01;
-                    printf("[%sERROR%s] Speed too low, clamping to %.2f\n", CLR_RED, CLR_RESET, input_speed); // Fixed typo & removed invalid ':'
+                    printf("[%sERROR%s] Speed too low, clamping to %.2f\n", CLR_RED, CLR_RESET, input_speed); 
                     msleep(2000);
                 }
                 if (input_speed > 100.0) {
@@ -885,14 +897,15 @@ int main(int argc, char *argv[]) {
                 speed_factor = 1.0 / input_speed; 
                 
                 i++; // Skip over the numeric value
+            
             } else {
-                printf("Error: --speed requires a numeric value.\n");
+                printf("Error: --speed requires a float value.\n");
                 print_help(argv[0]);
                 return 1;
             }
         } 
         else {
-            // If it's not a known flag, it must be the target module
+            // Tot a known flag, should be the target module
             target_module = argv[i];
         }
     }
@@ -908,7 +921,7 @@ int main(int argc, char *argv[]) {
         target_module = modules[rand() % num_modules].name;
     }
 
-    // Module execution loop... (keep your existing logic here)
+    // Module execution loop
     for (int i = 0; i < num_modules; i++) {
         if (strcmp(target_module, modules[i].name) == 0) {
             printf("\033[?25l"); // Hide cursor

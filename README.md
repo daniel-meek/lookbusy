@@ -60,7 +60,7 @@ Since `lookbusy` uses standard C libraries, you only need `gcc` to get it runnin
 
 ## Changelog
 
-### v0.0.3-experimental - 2026-04-09
+### v0.0.3-experimental - 2026-04-10
 
 - Implemented variable speed settings.
 - Added short flag for help `-h, --help`, about `-a, --about`, and version `-v, --version`.
